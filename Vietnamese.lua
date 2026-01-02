@@ -2,17 +2,32 @@ local VNTranslate = {}
 
 local function isVietnam()
     local LocalizationService = game:GetService("LocalizationService")
+    local success, result = pcall(function()
+        return LocalizationService.RobloxLocaleId
+    end)
+    
+    if success then
+        if result:find("vi") or result:find("VN") or result:find("vi-vn") then
+            return true
+        end
+    end
+    
     local Players = game:GetService("Players")
     local player = Players.LocalPlayer
-    
-    local success, countryCode = pcall(function()
+    local success2, countryCode = pcall(function()
         return LocalizationService:GetCountryRegionForPlayerAsync(player)
     end)
     
-    return success and countryCode == "VN"
+    if success2 and countryCode == "VN" then
+        return true
+    end
+    
+    return false
 end
 
 VNTranslate.Dict = {
+    ["Bacon Hub"] = "Bacon Hub",
+    ["Bloxfruits"] = "Bloxfruits",
     ["Discord"] = "Discord",
     ["Shop"] = "Cửa Hàng",
     ["Status And Server"] = "Trạng Thái & Máy Chủ",
@@ -50,8 +65,11 @@ VNTranslate.Dict = {
     ["% Health player"] = "% Máu",
     ["Distance Teleport Y"] = "Khoảng Cách Bay",
     ["Auto Set Spawn Point"] = "Tự Động Đặt Điểm Hồi Sinh",
+    ["Auto Request Temple of Time"] = "Tự Động Yêu Cầu Đền Thời Gian",
+    ["Time Hop Server"] = "Thời Gian Đổi Server",
     ["Bring Mob"] = "Kéo Quái",
     ["Bring Mob Speed"] = "Tốc Độ Kéo Quái",
+    ["Auto Anti - Admin Join Server"] = "Tự Động Chống Admin Vào Server",
     ["Select Method Farm"] = "Chọn Cách Farm",
     ["Level Farm"] = "Farm Cấp",
     ["Farm Bones"] = "Farm Xương",
@@ -61,6 +79,9 @@ VNTranslate.Dict = {
     ["Start Farm"] = "Bắt Đầu Farm",
     ["Get Quest Farm [Katakuri Or Bone]"] = "Nhận Quest [Katakuri/Xương]",
     ["Auto Farm Candy"] = "Tự Động Farm Kẹo",
+    ["Auto Random Christmas"] = "Tự Động Random Giáng Sinh",
+    ["Auto Open Gift Box"] = "Tự Động Mở Hộp Quà",
+    ["Auto Store Gift Box"] = "Tự Động Cất Hộp Quà",
     ["Farming Material"] = "Farm Nguyên Liệu",
     ["Select Material"] = "Chọn Nguyên Liệu",
     ["Farm Material"] = "Farm Nguyên Liệu",
@@ -81,6 +102,7 @@ VNTranslate.Dict = {
     ["Auto Factory"] = "Tự Động Factory",
     ["Auto Pirate Raid"] = "Tự Động Pirate Raid",
     ["Auto Elite Hunter"] = "Tự Động Thợ Săn Ưu Tú",
+    ["Hop Server Elite Hunter"] = "Đổi Server Thợ Săn Ưu Tú",
     ["Auto Open Haki Pad"] = "Tự Động Mở Haki Pad",
     ["Auto Attack Rip Indra"] = "Tự Động Đánh Rip Indra",
     ["Auto Soul Reaper"] = "Tự Động Soul Reaper",
@@ -89,6 +111,11 @@ VNTranslate.Dict = {
     ["Auto Phoenix Raid"] = "Tự Động Phoenix Raid",
     ["Auto Dark Blade V3"] = "Tự Động Dark Blade V3",
     ["Auto Darkbeard"] = "Tự Động Darkbeard",
+    ["Auto Fishing"] = "Tự Động Câu Cá",
+    ["Select Rod"] = "Chọn Cần Câu",
+    ["Select Bait"] = "Chọn Mồi",
+    ["Auto Claim Dojo Belt"] = "Tự Động Nhận Đai Dojo",
+    ["Auto Claim Upgrade Dragon Talon"] = "Tự Động Nhận Nâng Cấp Móng Rồng",
     ["Auto Collect Berry"] = "Tự Động Nhặt Berry",
     ["Hop Find Berry"] = "Đổi Server Tìm Berry",
     ["Auto Chest"] = "Tự Động Mở Rương",
@@ -117,6 +144,12 @@ VNTranslate.Dict = {
     ["Auto Farm Raid"] = "Tự Động Farm Raid",
     ["Auto Awaken Fruit"] = "Tự Động Thức Tỉnh Trái",
     ["Auto Teleport To Lab"] = "Tự Động Bay Đến Lab",
+    ["Dungeon"] = "Hầm Ngục",
+    ["Teleport Dungeon Hub"] = "Bay Đến Trung Tâm Hầm Ngục",
+    ["Auto Dungeon"] = "Tự Động Hầm Ngục",
+    ["Select Dungeon Pad"] = "Chọn Bệ Hầm Ngục",
+    ["Teleport to Selected Pad"] = "Bay Đến Bệ Đã Chọn",
+    ["Remove Lighting Effect"] = "Xóa Hiệu Ứng Ánh Sáng",
     ["Ship Speed Modifier"] = "Chỉnh Tốc Độ Thuyền",
     ["Ship Speed"] = "Tốc Độ Thuyền",
     ["Auto Press W"] = "Tự Động Nhấn W",
@@ -158,6 +191,7 @@ VNTranslate.Dict = {
     ["Auto Finish Train Quest"] = "Tự Động Hoàn Thành Quest Train",
     ["Tiers Gear V4"] = "Cấp Độ Gear V4",
     ["Auto Pull Lever"] = "Tự Động Kéo Cần",
+    ["Not Working Well Yet"] = "Chưa Hoạt Động Tốt",
     ["Talk With Stone"] = "Nói Với Đá",
     ["Teleport To Migare Island"] = "Bay Đến Đảo Migare",
     ["Auto Teleport To Highest Point"] = "Tự Động Bay Đến Điểm Cao Nhất",
@@ -191,9 +225,11 @@ VNTranslate.Dict = {
     ["Craft T-Rex Skull"] = "Chế Đầu Lâu T-Rex",
     ["Crafting Volcanic Magnet"] = "Chế Nam Châm Núi Lửa",
     ["Auto Find Prehistoric Island"] = "Tự Động Tìm Đảo Tiền Sử",
+    ["Prehistoric Island Has Appeared And Has Stopped Boat Please Turn Off Function"] = "Đảo Tiền Sử Đã Xuất Hiện Và Đã Dừng Thuyền Vui Lòng Tắt Chức Năng",
     ["Teleport Prehistoric Island"] = "Bay Đến Đảo Tiền Sử",
     ["Auto Start Prehistoric island"] = "Tự Động Bắt Đầu Đảo Tiền Sử",
     ["Auto Event Prehistoric Island"] = "Tự Động Sự Kiện Đảo Tiền Sử",
+    ["Auto Start Event And Kill Golem Aura,Auto Fix Volcano"] = "Tự Động Bắt Đầu Sự Kiện Và Giết Golem Aura, Tự Động Sửa Núi Lửa",
     ["Auto Reset When Complete Volcano"] = "Tự Động Reset Khi Hoàn Thành Núi Lửa",
     ["Auto Collect Bones"] = "Tự Động Nhặt Xương",
     ["Auto Collect Egg"] = "Tự Động Nhặt Trứng",
@@ -228,8 +264,6 @@ VNTranslate.Dict = {
 }
 
 if isVietnam() then
-    local oldAddTab, oldAddButton, oldAddToggle, oldAddDropdown, oldAddSection, oldAddParagraph
-    
     task.spawn(function()
         repeat task.wait() until _G.Library or getgenv().Library
         local Library = _G.Library or getgenv().Library
@@ -267,6 +301,9 @@ if isVietnam() then
                     end
                     if v.Text and VNTranslate.Dict[v.Text] then
                         v.Text = VNTranslate.Dict[v.Text]
+                    end
+                    if v.Description and VNTranslate.Dict[v.Description] then
+                        v.Description = VNTranslate.Dict[v.Description]
                     end
                 elseif type(v) == "string" and VNTranslate.Dict[v] then
                     args[i] = VNTranslate.Dict[v]
